@@ -6,6 +6,7 @@
         x:Class="player.MainWindow"
         Title="player">
     <StackPanel>
+    <!--Width="550"  -->
       <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

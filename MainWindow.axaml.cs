@@ -31,12 +31,18 @@ namespace player
             }
         }
 
-        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        private async void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             try
             {
-                sekundy++;
-                //slider1.Value++;
+                if (music.Playing)
+                {
+                    sekundy++;
+                    await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        slider1.Value++;
+                    });
+                }
             }
             catch (Exception ex)
             {
