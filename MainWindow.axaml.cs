@@ -20,16 +20,7 @@ namespace player
         private int sekundy = 0;
         System.Timers.Timer timer = new Timer();
 
-         void sliderValueIncrease(object sender, ElapsedEventArgs e)
-        {
-            while (true)
-            {
-                if(music.Playing)
-                {
-                    slider1.Value++;
-                }
-            }
-        }
+        
 
         private async void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
