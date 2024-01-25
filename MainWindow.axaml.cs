@@ -20,23 +20,20 @@ namespace player
         private int sekundy = 0;
         System.Timers.Timer timer = new Timer();
 
-         void sliderValueIncrease(object sender, ElapsedEventArgs e)
-        {
-            while (true)
-            {
-                if(music.Playing)
-                {
-                    slider1.Value++;
-                }
-            }
-        }
+        
 
-        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+         private async void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             try
             {
-                sekundy++;
-                //slider1.Value++;
+                if (music.Playing)
+                {
+                    sekundy++;
+                    await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        slider1.Value++;
+                    });
+                }
             }
             catch (Exception ex)
             {
