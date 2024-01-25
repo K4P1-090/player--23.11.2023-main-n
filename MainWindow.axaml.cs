@@ -80,11 +80,8 @@ namespace player
                         obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/dragon.jpg");
                         break;
                     }
-                    default:
-                    {
-                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/1.jpg");
-                        break;
-                    }
+                    
+                    
                 }
                 string filePath = "ścieżka/do/pliku.mp3";
                 byte[] coverData = await GetMp3Cover(result[0]);
