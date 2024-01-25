@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
+using Avalonia.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls.Primitives;
 using System.Timers;
@@ -30,7 +31,7 @@ namespace player
                 if (music.Playing)
                 {
                     sekundy++;
-                    await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                    await Dispatcher.UIThread.InvokeAsync(() =>
                     {
                         slider1.Value++;
                     });
@@ -219,5 +220,13 @@ namespace player
                 return "Nieznany czas trwania";
             }
         }
+        // if(pizda)
+        // {
+        //     cout<<"cyce"<<endl;
+        // }
+        // else
+        // {
+        //     cout<<"janota ma cyce"<<endl;
+        // }
     }
 }
