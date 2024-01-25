@@ -4,10 +4,13 @@ using System;
 using System.Threading.Tasks;
 using Avalonia.Controls.Primitives;
 using System.Timers;
+using Avalonia.Media.Imaging;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using TagLib;
 using NetCoreAudio;
+using System.Drawing;
 
 namespace player
 {
@@ -59,6 +62,29 @@ namespace player
                 string title2 = await GetMp3Title(result[0]);
                 string author2 = await GetMp3Author(result[0]);
                 string length = await GetMp3Length(result[0]);
+                switch(title2)
+                {
+                    case "Driftveil City":
+                    {
+                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/tot.png");
+                        break;
+                    }
+                    case "Friesenjung":
+                    {
+                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/junge.jpg");
+                        break;
+                    }
+                    case "Power of the Saber Blade":
+                    {
+                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/dragon.jpg");
+                        break;
+                    }
+                    default:
+                    {
+                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/1.jpg");
+                        break;
+                    }
+                }
                 string filePath = "ścieżka/do/pliku.mp3";
                 byte[] coverData = await GetMp3Cover(result[0]);
 
