@@ -20,9 +20,7 @@ namespace player
         private int sekundy = 0;
         System.Timers.Timer timer = new Timer();
 
-        
-
-         private async void OnTimedEvent(object sender, ElapsedEventArgs e)
+        private async void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             try
             {
@@ -37,7 +35,7 @@ namespace player
             }
             catch (Exception ex)
             {
-
+                // Obsługa błędu
             }
         }
 
@@ -61,6 +59,18 @@ namespace player
                 string title2 = await GetMp3Title(result[0]);
                 string author2 = await GetMp3Author(result[0]);
                 string length = await GetMp3Length(result[0]);
+                string filePath = "ścieżka/do/pliku.mp3";
+                byte[] coverData = await GetMp3Cover(result[0]);
+
+                if (coverData != null)
+                {
+                    // Obsługa obrazu w tagu MP3
+                }
+                else
+                {
+                    // Brak obrazu w tagu MP3
+                }
+
                 czas.Text = length;
                 Tytul.Text = title2;
                 wykonawca.Text = author2;
@@ -70,27 +80,25 @@ namespace player
         public void btn1_click(Object sender, RoutedEventArgs e)
         {
             music.Stop().Wait();
-            
         }
 
-        
-
-        public void btn2_click(Object sender, RoutedEventArgs e)
+        public async void btn2_click(Object sender, RoutedEventArgs e)
         {
             if (!music.Playing)
             {
                 if (mp3.Text != null)
                 {
                     music.Play(mp3.Text).Wait();
-                    slider1.Value=0;
+                    slider1.Value = 0;
                     btn2.Content = "𝄃𝄃";
                     timer.Start();
                 }
                 else
                 {
-                    slider1.Value=0;
+                    slider1.Value = 0;
                     music.Play(plik).Wait();
                     btn2.Content = "𝄃𝄃";
+                    this.Title = await GetMp3Title(mp3.Text);
                 }
             }
             else
@@ -98,7 +106,6 @@ namespace player
                 music.Stop().Wait();
                 btn2.Content = "𝅘𝅥𝅰";
                 timer.Stop();
-                this.Title = sekundy.ToString();
             }
         }
 
@@ -120,6 +127,28 @@ namespace player
             {
                 Console.WriteLine($"Błąd odczytu pliku MP3: {ex.Message}");
                 return "Nieznany tytuł";
+            }
+        }
+
+        private async Task<byte[]> GetMp3Cover(string filePath)
+        {
+            try
+            {
+                var file = await Task.Run(() => TagLib.File.Create(filePath));
+                if (file.Tag != null && file.Tag.Pictures.Length > 0)
+                {
+                    var picture = file.Tag.Pictures[0];
+                    return picture.Data.Data;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Błąd odczytu pliku MP3: {ex.Message}");
+                return null;
             }
         }
 
