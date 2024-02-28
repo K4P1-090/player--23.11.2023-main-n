@@ -217,13 +217,6 @@ namespace player
                 return "Nieznany czas trwania";
             }
         }
-        // if(pizda)
-        // {
-        //     cout<<"cyce"<<endl;
-        // }
-        // else
-        // {
-        //     cout<<"janota ma cyce"<<endl;
-        // }
+        
     }
 }
