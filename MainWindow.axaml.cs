@@ -61,11 +61,12 @@ namespace player
             if (result != null)
             {
                 mp3.Text = result[0];
-               // win.muzyka.Items.Add(mp3.Text);
                 TagLib.File file = TagLib.File.Create(mp3.Text);
                 string title2 = await GetMp3Title(result[0]);
                 string author2 = await GetMp3Author(result[0]);
                 string length = await GetMp3Length(result[0]);
+                win.muzyka.Items.Add(title2);
+                
                 switch(title2)
                 {
                     case "Driftveil City":
