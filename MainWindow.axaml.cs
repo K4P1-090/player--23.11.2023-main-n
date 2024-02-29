@@ -48,6 +48,8 @@ namespace player
             InitializeComponent();
             timer.Interval = 1000;
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            Playlist playlist = new Playlist();
+            playlist.Show();
         }
 
         public async void btn_open_click(Object sender, RoutedEventArgs e)
