@@ -17,6 +17,7 @@ namespace player
 {
     public partial class MainWindow : Window
     {
+        Playlist win = new Playlist();
         string plik = "toothless.mp3";
         bool isPlaying = false;
         Player music = new Player();
@@ -48,19 +49,19 @@ namespace player
             InitializeComponent();
             timer.Interval = 1000;
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            Playlist playlist = new Playlist();
-            playlist.Show();
+            win.Show();
         }
 
         public async void btn_open_click(Object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
-
+            
             dialog.Title = "Otwórz plik mp3";
             string[] result = await dialog.ShowAsync(this);
             if (result != null)
             {
                 mp3.Text = result[0];
+               // win.muzyka.Items.Add(mp3.Text);
                 TagLib.File file = TagLib.File.Create(mp3.Text);
                 string title2 = await GetMp3Title(result[0]);
                 string author2 = await GetMp3Author(result[0]);
