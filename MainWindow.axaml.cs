@@ -43,6 +43,7 @@ namespace player
                 // Obsługa błędu
             }
         }
+        
 
         public MainWindow()
         {
@@ -53,57 +54,64 @@ namespace player
         }
 
         public async void btn_open_click(Object sender, RoutedEventArgs e)
+{
+    var dialog = new OpenFileDialog();
+    
+    dialog.Title = "Otwórz plik mp3";
+    string[] result = await dialog.ShowAsync(this);
+    if (result != null)
+    {
+        if (result != null && result.Length > 0 && result[0] != null)
         {
-            var dialog = new OpenFileDialog();
-            
-            dialog.Title = "Otwórz plik mp3";
-            string[] result = await dialog.ShowAsync(this);
-            if (result != null)
+            await LoadMp3Metadata(result[0]);
+            //win.muzyka.Items.Add(result[0]);
+        }
+        mp3.Text = result[0];
+        TagLib.File file = TagLib.File.Create(mp3.Text);
+        string title2 = await GetMp3Title(result[0]);
+        string author2 = await GetMp3Author(result[0]);
+        string length = await GetMp3Length(result[0]);
+        //win.Add(title2);
+        win.Add(mp3.Text);
+        string filePath = result[0];
+        
+        switch(title2)
+        {
+            case "Driftveil City":
             {
-                mp3.Text = result[0];
-                TagLib.File file = TagLib.File.Create(mp3.Text);
-                string title2 = await GetMp3Title(result[0]);
-                string author2 = await GetMp3Author(result[0]);
-                string length = await GetMp3Length(result[0]);
-                win.muzyka.Items.Add(title2);
-                
-                switch(title2)
-                {
-                    case "Driftveil City":
-                    {
-                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/tot.png");
-                        break;
-                    }
-                    case "Friesenjung":
-                    {
-                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/junge.jpg");
-                        break;
-                    }
-                    case "Power of the Saber Blade":
-                    {
-                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/dragon.jpg");
-                        break;
-                    }
-                    
-                    
-                }
-                string filePath = "ścieżka/do/pliku.mp3";
-                byte[] coverData = await GetMp3Cover(result[0]);
-
-                if (coverData != null)
-                {
-                    // Obsługa obrazu w tagu MP3
-                }
-                else
-                {
-                    // Brak obrazu w tagu MP3
-                }
-
-                czas.Text = length;
-                Tytul.Text = title2;
-                wykonawca.Text = author2;
+                obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/tot.png");
+                break;
+            }
+            case "Friesenjung":
+            {
+                obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/junge.jpg");
+                break;
+            }
+            case "Power of the Saber Blade":
+            {
+                obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/dragon.jpg");
+                break;
             }
         }
+        
+        
+       // byte[] coverData = await GetMp3Cover(result[0]);
+
+        // if (coverData != null)
+        // {
+        //     // Obsługa obrazu w tagu MP3
+        // }
+        // else
+        // {
+        //     // Brak obrazu w tagu MP3
+        // }
+
+        czas.Text = length;
+        Tytul.Text = title2;
+        wykonawca.Text = author2;
+    }
+}
+
 
         public void btn1_click(Object sender, RoutedEventArgs e)
         {
@@ -116,10 +124,37 @@ namespace player
             {
                 if (mp3.Text != null)
                 {
-                    music.Play(mp3.Text).Wait();
+                    music.Play(win.playlista.SelectedItem.ToString()).Wait();
                     slider1.Value = 0;
                     btn2.Content = "𝄃𝄃";
                     timer.Start();
+                    string title2 = await GetMp3Title(win.playlista.SelectedItem.ToString());
+        string author2 = await GetMp3Author(win.playlista.SelectedItem.ToString());
+        string length = await GetMp3Length(win.playlista.SelectedItem.ToString());
+        
+        
+        
+        switch(title2)
+        {
+            case "Driftveil City":
+            {
+                obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/tot.png");
+                break;
+            }
+            case "Friesenjung":
+            {
+                obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/junge.jpg");
+                break;
+            }
+            case "Power of the Saber Blade":
+            {
+                obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/dragon.jpg");
+                break;
+            }
+        }
+        czas.Text = length;
+        Tytul.Text = title2;
+        wykonawca.Text = author2;
                 }
                 else
                 {
@@ -221,6 +256,30 @@ namespace player
                 return "Nieznany czas trwania";
             }
         }
+        private async Task LoadMp3Metadata(string filePath)
+{
+    try
+    {
+        TagLib.File file = await Task.Run(() => TagLib.File.Create(filePath));
+        if (file != null)
+        {
+            string title = string.IsNullOrEmpty(file.Tag.Title) ? "Unknown Title" : file.Tag.Title;
+            string artist = string.IsNullOrEmpty(file.Tag.FirstPerformer) ? "Unknown Artist" : file.Tag.FirstPerformer;
+            string duration = file.Properties.Duration.ToString(@"mm\:ss");
+            // Update UI with metadata
+            Tytul.Text = title;
+            wykonawca.Text = artist;
+            czas.Text = duration;
+            // Load cover image if available
+            byte[] coverData = file.Tag.Pictures.Length > 0 ? file.Tag.Pictures[0].Data.Data : null;
+            // Display cover image in UI
+        }
+    }
+    catch (Exception ex)
+    {
+        Debug.WriteLine($"Error reading MP3 file: {ex.Message}");
+    }
+}
         
     }
 }

@@ -10,9 +10,7 @@
       <Grid>
       <TextBlock Margin="15">Playlista</TextBlock>
           <ListBox Name="muzyka" Margin="30">
-            <ListBoxItem>Item #1 </ListBoxItem>
-            <ListBoxItem>Item #2 </ListBoxItem>
-            <ListBoxItem>Item #3 </ListBoxItem>
+            
           </ListBox>
     	</Grid>
 	</StackPanel>

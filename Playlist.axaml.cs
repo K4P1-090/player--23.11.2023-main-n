@@ -24,17 +24,23 @@ namespace player
         
         public ListBox playlista = new ListBox();
         
-        //this.FindControl<ListBox>("muzyka");
+        
       
         private void InitializeComponent()
         {
             
             AvaloniaXamlLoader.Load(this);
+            playlista = this.FindControl<ListBox>("muzyka");
         }
         public Playlist()
         {
             
             InitializeComponent();
+        }
+        public void Add(string item){
+            if(playlista != null){
+                playlista.Items.Add(item);
+            }
         }
     }
 }
