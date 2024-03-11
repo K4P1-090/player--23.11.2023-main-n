@@ -12,11 +12,24 @@ using System.IO;
 using TagLib;
 using NetCoreAudio;
 using System.Drawing;
+using MySql.Data.MySqlClient;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace player
 {
     public partial class MainWindow : Window
     {
+        string server="localhost";
+        string user="root";
+        string pw="";
+        string db="player";
+        
+
+        /**
+        *             ^
+        *Mysql Connect|
+        *             |
+        **/
         Playlist win = new Playlist();
         string plik = "toothless.mp3";
         bool isPlaying = false;
