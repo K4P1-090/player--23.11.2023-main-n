@@ -119,56 +119,58 @@ namespace player
         }
 
         public async void btn2_click(Object sender, RoutedEventArgs e)
-{
-    if (!music.Playing)
-    {
-        if (mp3.Text != null)
         {
-            music.Play(win.playlista.SelectedItem?.ToString()).Wait(); // Add null check here
-            slider1.Value = 0;
-            btn2.Content = "𝄃𝄃";
-            timer.Start();
-            
-            // Add null check here as well
-            if (win.playlista.SelectedItem != null)
+            if (!music.Playing)
             {
-                string title2 = await GetMp3Title(win.playlista.SelectedItem.ToString());
-                string author2 = await GetMp3Author(win.playlista.SelectedItem.ToString());
-                string length = await GetMp3Length(win.playlista.SelectedItem.ToString());
-                
-                switch(title2)
+                if (mp3.Text != null)
                 {
-                    case "Driftveil City":
-                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/tot.png");
-                        break;
-                    case "Friesenjung":
-                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/junge.jpg");
-                        break;
-                    case "Power of the Saber Blade":
-                        obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/dragon.jpg");
-                        break;
-                }
-                
-                czas.Text = length;
-                Tytul.Text = title2;
-                wykonawca.Text = author2;
+                    music.Play(win.playlista.SelectedItem.ToString()).Wait();
+                    slider1.Value = 0;
+                    btn2.Content = "𝄃𝄃";
+                    timer.Start();
+                    string title2 = await GetMp3Title(win.playlista.SelectedItem.ToString());
+        string author2 = await GetMp3Author(win.playlista.SelectedItem.ToString());
+        string length = await GetMp3Length(win.playlista.SelectedItem.ToString());
+        
+        
+        
+        switch(title2)
+        {
+            case "Driftveil City":
+            {
+                obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/tot.png");
+                break;
+            }
+            case "Friesenjung":
+            {
+                obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/junge.jpg");
+                break;
+            }
+            case "Power of the Saber Blade":
+            {
+                obrazek.Source=new Avalonia.Media.Imaging.Bitmap("Assets/dragon.jpg");
+                break;
             }
         }
-        else
-        {
-            slider1.Value = 0;
-            music.Play(plik).Wait();
-            btn2.Content = "𝄃𝄃";
-            this.Title = await GetMp3Title(mp3.Text);
+        czas.Text = length;
+        Tytul.Text = title2;
+        wykonawca.Text = author2;
+                }
+                else
+                {
+                    slider1.Value = 0;
+                    music.Play(plik).Wait();
+                    btn2.Content = "𝄃𝄃";
+                    this.Title = await GetMp3Title(mp3.Text);
+                }
+            }
+            else
+            {
+                music.Stop().Wait();
+                btn2.Content = "𝅘𝅥𝅰";
+                timer.Stop();
+            }
         }
-    }
-    else
-    {
-        music.Stop().Wait();
-        btn2.Content = "𝅘𝅥𝅰";
-        timer.Stop();
-    }
-}
 
         private async Task<string> GetMp3Title(string filePath)
         {
