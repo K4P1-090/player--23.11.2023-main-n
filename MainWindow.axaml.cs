@@ -25,11 +25,6 @@ namespace player
         string db="player";
         
 
-        /**
-        *             ^
-        *Mysql Connect|
-        *             |
-        **/
         Playlist win = new Playlist();
         string plik = "toothless.mp3";
         bool isPlaying = false;
@@ -293,6 +288,25 @@ namespace player
         Debug.WriteLine($"Error reading MP3 file: {ex.Message}");
     }
 }
-        
+
+        private void UseDatabaseForPlaylist()
+        {
+            string connectionString = $"Server={server};Database={db};Uid={user};Pwd={pw};";
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM playlist";
+                MySqlCommand command = new MySqlCommand(query, connection);
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string data = reader.GetString(0);
+                        win.Add(data);
+                    }
+                }
+            }
+        }
     }
 }
