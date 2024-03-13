@@ -19,10 +19,7 @@ namespace player
 {
     public partial class MainWindow : Window
     {
-        string server="localhost";
-        string user="root";
-        string pw="";
-        string db="player";
+       
         
 
         Playlist win = new Playlist();
@@ -82,6 +79,7 @@ namespace player
         //win.Add(title2);
         win.Add(mp3.Text);
         string filePath = result[0];
+        Add2Database(title2, filePath);
         
         switch(title2)
         {
@@ -289,14 +287,18 @@ namespace player
     }
 }
 
-        private void UseDatabaseForPlaylist()
+         string server="localhost";
+        string user="root";
+        string pw="";
+        string db="playlista";
+        private void Add2Database(string tyt, string sciezka)
         {
             string connectionString = $"Server={server};Database={db};Uid={user};Pwd={pw};";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
 
-                string query = "SELECT * FROM playlist";
+                string query = "insert into lista(Tytul,Sciezka) values("+tyt+","+sciezka+")";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
