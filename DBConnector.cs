@@ -1,7 +1,7 @@
 using System;
 using MySql.Data.MySqlClient;
 
-namespace Player
+namespace player
 {
     public class DBConnector
     {
