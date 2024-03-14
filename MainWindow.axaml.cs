@@ -12,11 +12,16 @@ using System.IO;
 using TagLib;
 using NetCoreAudio;
 using System.Drawing;
+using MySql.Data.MySqlClient;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace player
 {
     public partial class MainWindow : Window
     {
+       
+        
+
         Playlist win = new Playlist();
         string plik = "toothless.mp3";
         bool isPlaying = false;
@@ -24,6 +29,39 @@ namespace player
         byte volume = Convert.ToByte(3);
         private int sekundy = 0;
         System.Timers.Timer timer = new Timer();
+
+         private string GetFilePathFromDatabase(string songTitle)
+        {
+            DBConnector dbConnector = DBConnector.Instance();
+            dbConnector.Server = "10.0.2.3";
+            dbConnector.DatabaseName = "playlista";
+            dbConnector.UserName = "kpawlowski";
+            dbConnector.Password = "K4P1_090";
+
+            if (dbConnector.IsConnect())
+            {
+                string query = "SELECT path FROM playlist WHERE title = @title";
+                MySqlCommand command = new MySqlCommand(query, dbConnector.Connection);
+                command.Parameters.AddWithValue("@title", songTitle);
+                object result = command.ExecuteScalar();
+                dbConnector.Close();
+
+                if (result != null)
+                {
+                    return result.ToString();
+                }
+                else
+                {
+                    Console.WriteLine("File path not found for the selected song.");
+                    return null;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Failed to connect to the database.");
+                return null;
+            }
+        }
 
         private async void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
@@ -65,6 +103,7 @@ namespace player
         {
             await LoadMp3Metadata(result[0]);
             //win.muzyka.Items.Add(result[0]);
+            win.Add(System.IO.Path.GetFileName(result[0]));
         }
         mp3.Text = result[0];
         TagLib.File file = TagLib.File.Create(mp3.Text);
@@ -72,8 +111,9 @@ namespace player
         string author2 = await GetMp3Author(result[0]);
         string length = await GetMp3Length(result[0]);
         //win.Add(title2);
-        win.Add(mp3.Text);
+       // win.Add(mp3.Text);
         string filePath = result[0];
+        //Add2Database(title2, filePath);
         
         switch(title2)
         {
@@ -93,6 +133,30 @@ namespace player
                 break;
             }
         }
+         mp3.Text = result[0];
+            // if (result != null)
+            // {
+            //     try{
+            //         var db = new DBConnector();
+            //         db.Server = "10.0.2.3";
+            //         db.DatabaseName = "dwierzbicki";
+            //         db.UserName = "dwierzbicki";
+            //         db.Password = "Jui!#der7692@";
+            //         if(db.IsConnect()){
+            //             this.Title = "Połączono";
+            //             if(db.InsertValues("songs",result[0],author2,title2)){
+            //                 this.Title = "Wykonano Polecenie";
+            //                 playlist.LoadSongsFromDatabase();
+            //             }
+            //             else{
+            //                 this.Title = "Nie wykonano polecenia";
+            //             }
+            //         }
+            //     }
+            //     catch(Exception ex){
+            //         Debug.WriteLine("Error: "+ ex.Message);
+            //     }                
+            // }
         
         
        // byte[] coverData = await GetMp3Cover(result[0]);
@@ -280,6 +344,29 @@ namespace player
         Debug.WriteLine($"Error reading MP3 file: {ex.Message}");
     }
 }
-        
+
+         string server="localhost";
+        string user="root";
+        string pw="";
+        string db="playlista";
+        // private void Add2Database(string tyt, string sciezka)
+        // {
+        //     string connectionString = $"Server={server};Database={db};Uid={user};Pwd={pw};";
+        //     using (MySqlConnection connection = new MySqlConnection(connectionString))
+        //     {
+        //         connection.Open();
+
+        //         string query = "insert into lista(Tytul,Sciezka) values("+tyt+","+sciezka+")";
+        //         MySqlCommand command = new MySqlCommand(query, connection);
+        //         using (MySqlDataReader reader = command.ExecuteReader())
+        //         {
+        //             while (reader.Read())
+        //             {
+        //                 string data = reader.GetString(0);
+        //                 win.Add(data);
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
