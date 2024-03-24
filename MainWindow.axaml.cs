@@ -11,7 +11,6 @@ using System.Drawing;
 using System.IO;
 using TagLib;
 using NetCoreAudio;
-using System.Drawing;
 using MySql.Data.MySqlClient;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
